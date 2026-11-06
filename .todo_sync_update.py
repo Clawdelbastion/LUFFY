@@ -4,7 +4,7 @@
 Baseline: the existing README TODO entries.
 Only .py files that differ between origin/main and HEAD (dev) are updated:
 their baseline entries are replaced by the TODO markers extracted from dev.
-All other entries are preserved byte-for-byte in content.
+All other entries are preserved.
 """
 import re
 import subprocess
