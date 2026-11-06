@@ -56,15 +56,6 @@ LUFFY/
 
 ### 📝 Complete TODO List
 
-- [ ] **.todo_sync_update.py:2** - List with TODO markers.
-- [ ] **.todo_sync_update.py:4** - entries.
-- [ ] **.todo_sync_update.py:6** - markers extracted from dev.
-- [ ] **.todo_sync_update.py:13** - _RE = re.compile(r'TODO:?\s*(.*)')
-- [ ] **.todo_sync_update.py:15** - List'
-- [ ] **.todo_sync_update.py:31** - ' in line:
-- [ ] **.todo_sync_update.py:32** - _RE.search(line)
-- [ ] **.todo_sync_update.py:52** - (s) from {p}:')
-- [ ] **.todo_sync_update.py:90** - section boundaries', file=sys.stderr)
 - [ ] **luffy/deepscaler/utils.py:45** - Add logging for API calls and errors
 - [ ] **luffy/deepscaler/utils.py:46** - Support batch processing for multiple prompts
 - [ ] **luffy/deepscaler/utils.py:47** - Add timeout configuration for API calls
