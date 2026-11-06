@@ -4,6 +4,7 @@
 Baseline: the existing README TODO entries.
 Only .py files that differ between origin/main and HEAD (dev) are updated:
 their baseline entries are replaced by the TODO markers extracted from dev.
+Temporary/helper files are ignored and their entries removed.
 All other entries are preserved.
 """
 import re
@@ -14,6 +15,22 @@ TODO_RE = re.compile(r'TODO:?\s*(.*)')
 ENTRY_RE = re.compile(r'^- \[ \] \*\*(.+?):(\d+)\*\* - (.*)$')
 MARKER = '### \U0001f4dd Complete TODO List'
 NEXT_SECTION = '## \U0001f91d Contributing'
+
+# Temporary helper files introduced only to run this sync; never part of the
+# project's TODO baseline.
+IGNORE_PATHS = {
+    '.todo_sync_update.py',
+    'todo_sync_test.txt',
+    '.github/workflows/todo-sync.yml',
+}
+
+
+def is_ignored(path):
+    return (
+        path in IGNORE_PATHS
+        or path.startswith('.github/')
+        or path.startswith('.')
+    )
 
 
 def git(*args):
@@ -38,13 +55,13 @@ def extract_todos(path):
 def main():
     changed_py = [
         p for p in git('diff', '--name-only', 'origin/main', 'HEAD', '--', '*.py').splitlines()
-        if p.strip()
+        if p.strip() and not is_ignored(p)
     ]
-    print('Changed .py files between origin/main and HEAD:')
+    print('Changed .py files between origin/main and HEAD (excluding helpers):')
     for p in changed_py:
         print(f'  {p}')
     if not changed_py:
-        print('No .py changes; nothing to do.')
+        print('No relevant .py changes; nothing to do.')
         return
 
     new_todos = {p: extract_todos(p) for p in changed_py}
@@ -61,10 +78,13 @@ def main():
         match = ENTRY_RE.match(line)
         if match:
             entries.append((match.group(1), int(match.group(2)), match.group(3)))
-    print(f'Baseline entries: {len(entries)}')
+    print(f'Current entries: {len(entries)}')
 
     changed_set = set(changed_py)
-    kept = [e for e in entries if e[0] not in changed_set]
+    kept = [
+        e for e in entries
+        if e[0] not in changed_set and not is_ignored(e[0])
+    ]
     added = [
         (path, lineno, text)
         for path in changed_py
